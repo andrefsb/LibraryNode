@@ -1,9 +1,17 @@
 const http = require ("http");
 const port = 3000;
 
+const rotas={
+    '/':'Library',
+    '/livros':'Books',
+    '/autores':'Authors',
+    '/editoras': 'Publishers',
+    '/sobre': 'About'
+}
+
 const server = http.createServer((req, res)=>{
     res.writeHead(200,{'Content-Type': 'text/plain'});
-    res.end('Livraria');
+    res.end(rotas[req.url]);
 })
 
 server.listen(port, () => {
