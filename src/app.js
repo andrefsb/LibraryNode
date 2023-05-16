@@ -9,20 +9,7 @@ db.once("open",()=>{
 })
 
 const app = express();
-
 app.use(express.json());
-
 routes(app);
-
-  app.delete('/livros/:id', (req, res) => {
-    let {id} = req.params;
-    let index = buscaLivro(id);
-    livros.splice(index,1);
-    res.send(`Book ${id} removed successfully!`);
-  })
-
-  function buscaLivro(id) {
-    return livros.findIndex(livro => livro.id == id);
-  }
 
   export default app
