@@ -11,6 +11,7 @@
   "author": "André Boschetti",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^8.40.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {
