@@ -1,3 +1,4 @@
+import NaoEncontrado from "../erros/NaoEncontrado.js";
 import livros from "../models/Livro.js";
 
 class LivroController{
@@ -15,20 +16,23 @@ class LivroController{
     }
   };
 
-  static listarLivroPorId = async (req, res)=>{
+  static listarLivroPorId = async (req, res, next)=>{
    
-    try{
+    try {
       const id = req.params.id;
 
-      const livroResultados = await livros.findById(id)
+      const livroResultado = await livros.findById(id)
         .populate("autor", "nome")
         .exec();
 
-      res.status(200).send(livroResultados);
-
-    }catch(erro){
-      res.status(404).send({message: `${erro.message} -  book Id not found.`});
-    }        
+      if (livroResultado !== null) {
+        res.status(200).send(livroResultado);
+      } else {
+        next(new NaoEncontrado("Book Id not found."));
+      }
+    } catch (erro) {
+      next();
+    }     
   };
 
   static cadastrarLivro = async (req, res, next)=>{
@@ -48,11 +52,14 @@ class LivroController{
     try{
       const id = req.params.id;
 
-      await livros.findByIdAndUpdate(id,{$set: req.body});
+      const livroResultado = await livros.findByIdAndUpdate(id,{$set: req.body});
 
-      res.status(200).send({message: "Book successfully updated!"});
-
-    }catch(erro){
+      if (livroResultado !== null) {
+        res.status(200).send({message: "Book successfully updated."});
+      } else {
+        next(new NaoEncontrado("Book Id not found."));
+      }
+    } catch (erro) {
       next(erro);
     }
   };
@@ -61,10 +68,13 @@ class LivroController{
     try{
       const id = req.params.id;
 
-      await livros.findByIdAndDelete(id);
+      const livroResultado = await livros.findByIdAndDelete(id);
 
-      res.status(200).send({message: "Book successfully deleted!"});
-
+      if (livroResultado !== null) {
+        res.status(200).send({message: "Book successfully deleted."});
+      } else {
+        next(new NaoEncontrado("Book Id not found."));
+      }
     }catch(erro){
       next(erro);
     }
