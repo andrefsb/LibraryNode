@@ -31,7 +31,7 @@ class LivroController{
         next(new NaoEncontrado("Book Id not found."));
       }
     } catch (erro) {
-      next();
+      next(erro);
     }     
   };
 
