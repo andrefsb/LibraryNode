@@ -6,13 +6,16 @@ class LivroController{
 
   static listarLivros = async (req, res, next)=>{
     try{
-      let{ limite=5, pagina=1 } = req.query;
+      let{ limite=5, pagina=1 , ordenacao = "_id=-1"} = req.query;
 
+      let [campoOrdenacao, ordem]= ordenacao.split(":");
       limite = parseInt(limite);
       pagina = parseInt(pagina);
+      ordem = parseInt(ordem);
 
       if(limite >0 && pagina >0){
         const livrosResultado =  await livros.find()
+          .sort({[campoOrdenacao]: ordem})
           .skip(limite*(pagina-1))
           .limit(limite)
           .populate("autor")
